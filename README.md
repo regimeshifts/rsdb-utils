@@ -25,12 +25,8 @@ In the R terminal:
 ```bash
 # use reticulate
 library(reticulate)
-# create a python virtual environment
-virtualenv_create(envname = 'rsdb_venv')
-# load the virtual environment
-use_virtualenv('rsdb_venv')
 # install the rsdb-utils library
-reticulate::virtualenv_install('rsdb-utils')
+reticulate::py_install("rsdb-utils")
 ```
 
 ## Usage
@@ -48,10 +44,9 @@ df = read_rsdb("my_database.csv")
 #### R
 ```bash
 library(reticulate)
-use_virtualenv('rsdb_venv')
-read_rsdb <- import('rsdb_utils.read_rsdb')
+rsdb_utils <- import("rsdb_utils")
 
-read_rsdb("my_database.csv")
+rsdb_utils$read_rsdb("my_database.csv")
 ```
 
 ### Read and write a database file
@@ -70,13 +65,11 @@ write_rsdb(df, "my_database.csv")
 #### R
 ```bash
 library(reticulate)
-use_virtualenv('rsdb_venv')
-read_rsdb <- import('rsdb_utils.read_rsdb')
-write_rsdb <- import('rsdb_utils.write_rsdb')
+rsdb_utils <- import("rsdb_utils")
 
-df <- read_rsdb("my_database.csv")
+df <- read_rsdb$read_rsdb("my_database.csv")
 
-write_rsdb(df, "my_database.csv")
+read_rsdb$write_rsdb(df, "my_database.csv")
 ```
 
 ### Check a database
@@ -98,16 +91,13 @@ write_rsdb(df, "my_database.csv")
 #### R
 ```bash
 library(reticulate)
-use_virtualenv('rsdb_venv')
-read_rsdb <- import('rsdb_utils.read_rsdb')
-write_rsdb <- import('rsdb_utils.write_rsdb')
-check_rsdb <- import('rsdb_utils.check_rsdb')
+rsdb_utils <- import("rsdb_utils")
 
-df <- read_rsdb("my_database.csv")
+df <- read_rsdb$read_rsdb("my_database.csv")
 
-df <- check_rsdb("my_database.csv")
+df <- read_rsdb$check_rsdb("my_database.csv")
 
-write_rsdb(df, "my_database.csv")
+read_rsdb$write_rsdb(df, "my_database.csv")
 ```
 
 
@@ -136,7 +126,7 @@ You can install the package from source with reticulate in R.
 Use the instructions above in `Installation from R` and swap the line
 `reticulate::virtualenv_install("rsdb-utils")` by:
 ```R
-reticulate::virtualenv_install('/home/romain/Documents/SRC/RSDB/rsdb-utils')
+reticulate::virtualenv_install("rsdb-utils", "/path/to/source/rsdb-utils")
 ```
 Note that the editable installation ('pip install -e') doesn't work with reticulate, which
 means that you will need to reinstall the package each time you will modify the Python source code.
