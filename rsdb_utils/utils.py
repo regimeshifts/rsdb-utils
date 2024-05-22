@@ -4,6 +4,7 @@
 
 import json
 import warnings
+import pkgutil
 
 import pandas as pd
 import numpy as np
@@ -13,14 +14,10 @@ from tqdm import tqdm
 import jsonref  # dereferencing of JSON Reference
 from jsonschema import Draft202012Validator
 
-# replace with API call, package data or GitHub http download and cache
-schema_path = "../rsdb-schema/case_study_schema.json"
+# Load the JSON schema from the package data with all the references (defs)
+schema_path = "rsdb-schema/case_study_schema.json"
+rs_cs_schema = jsonref.loads(pkgutil.get_data(__name__, schema_path).decode('utf-8'))
 
-# Load the JSON schema
-with open(schema_path) as f:
-    # rs_cs_schema = json.load(f)
-    rs_cs_schema = f.read()
-    rs_cs_schema = jsonref.loads(rs_cs_schema)
 first_level_fields_in_schema = list(rs_cs_schema['properties'].keys())
 # check if the schema is valid
 Draft202012Validator.check_schema(rs_cs_schema)
