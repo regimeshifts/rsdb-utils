@@ -1,0 +1,3 @@
+[submodule "rsdb_utils/rsdb-schema"]
+	path = rsdb_utils/rsdb-schema
+	url = git@github.com:regimeshifts/rsdb-schema.git
