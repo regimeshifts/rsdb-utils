@@ -1,0 +1,46 @@
+[build-system]
+requires      = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rsdb-utils"
+version = "0.1.post1"
+description = "Utils to process the Regime Shifts DataBase CSV and parquet files"
+readme = "README.md"
+authors = [{ name = "Romain Thomas", email = "romain.thomas@su.se" }]
+license = {file = "LICENCE.txt"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Database",
+    "Topic :: File Formats :: JSON :: JSON Schema",
+    "Topic :: Utilities",
+]
+keywords = [
+    "Regime Shifts",
+    "Regime Shifts DataBase",
+    "RSDB",
+    "Ecosystems",
+    "Ecology",
+    "Social-ecological systems",
+    "Data analysis",
+    "Scientific research"
+]
+dependencies = [
+    "pandas>=2.2.2",
+    "jsonref>=1.1.0",
+    "jsonschema>=4.22.0",
+    "tqdm>=4.50.0",
+    "pyarrow"
+]
+requires-python = ">=3.9"
+
+[tool.setuptools]
+packages = ["rsdb_utils"]
+
+[project.urls]
+Homepage = "https://github.com/romain894/rsdb-utils"
+"Project website" = "https://www.regimeshifts.org/"

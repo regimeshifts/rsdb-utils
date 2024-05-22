@@ -1,0 +1,5 @@
+pandas>=2.2.2
+jsonref>=1.1.0
+jsonschema>=4.22.0
+tqdm>=4.50.0
+pyarrow

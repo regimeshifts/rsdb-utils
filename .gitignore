@@ -1,0 +1,14 @@
+.venv/
+
+.idea/
+
+**/__pycache__/*
+.pytest_cache/
+
+rsdb_utils.egg-info/
+dist/
+
+*.ipynb_checkpoints/
+*.ipynb
+
+*~lock*
