@@ -26,8 +26,8 @@ rsdb_test_dataset_with_errors_checked_csv_file = "rsdb_test_dataset_with_errors_
 rsdb_test_dataset_with_errors_checked_csv_path = os.path.join(os.path.dirname(__file__),
                                                               rsdb_test_dataset_with_errors_checked_csv_file)
 
-tmp_tests_enums_file = "tmp_tests_enums.csv"
-tmp_tests_enums_path = os.path.join(os.path.dirname(__file__), tmp_tests_enums_file)
+list_of_enums_from_json_schema_file = "list_of_enums_from_json_schema.csv"
+list_of_enums_from_json_schema_path = os.path.join(os.path.dirname(__file__), list_of_enums_from_json_schema_file)
 
 
 @pytest.mark.parametrize("file_path, col, row, value, value_type", [
@@ -86,7 +86,6 @@ def test_generate_enums_dataframe():
     To check that the CSV generated file with the enums is correct, we can check it with the schema rsdb_check function
     """
     df = generate_enums_dataframe()
-    df.to_csv(tmp_tests_enums_path, index=False)
-    df = read_rsdb(tmp_tests_enums_path)
-    os.remove(tmp_tests_enums_path)
+    df.to_csv(list_of_enums_from_json_schema_path, index=False)
+    df = read_rsdb(list_of_enums_from_json_schema_path)
     check_rsdb(df)
