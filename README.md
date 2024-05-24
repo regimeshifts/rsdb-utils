@@ -102,6 +102,16 @@ read_rsdb$write_rsdb(df, "my_database.csv")
 ```
 
 
+### Generate the enums lists
+
+#### Python
+```python
+from rsdb_utils import generate_enums_dataframe
+
+df = generate_enums_dataframe()
+df.to_csv("list_of_enums_from_json_schema.csv")
+```
+
 ## Development environment setup
 
 ### Python local installation
