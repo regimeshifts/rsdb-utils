@@ -7,7 +7,7 @@ Functionalities:
   - Import the database from a CSV or parquet file in a pandas DataFrame
   - Save the database in a CSV or parquet file from a pandas DataFrame
   - Check the database (a DataFrame) with the json schema or the Regime Shifts DataBase
-  - From the JSON schema, generate a CSV with the list of enums values
+  - From the JSON schema, generate a CSV with the list of enums values ([`tests/list_of_enums_from_json_schema`](https://github.com/regimeshifts/rsdb-utils/blob/main/tests/list_of_enums_from_json_schema.csv))
 
 Code repository: [https://github.com/regimeshifts/rsdb-utils](https://github.com/regimeshifts/rsdb-utils)
 
