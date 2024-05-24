@@ -7,21 +7,27 @@ import sys
 
 import pytest
 
-from rsdb_utils import read_rsdb, write_rsdb, check_rsdb
+from rsdb_utils import read_rsdb, write_rsdb, check_rsdb, generate_enums_dataframe
 
 rsdb_test_dataset_csv_file = "rsdb_test_dataset.csv"
 rsdb_test_dataset_csv_path = os.path.join(os.path.dirname(__file__), rsdb_test_dataset_csv_file)
-rsdb_test_dataset_to_write_csv_path = os.path.join(os.path.dirname(__file__), "tmp_python_test_file-"+rsdb_test_dataset_csv_file)
+rsdb_test_dataset_to_write_csv_path = os.path.join(os.path.dirname(__file__),
+                                                   "tmp_python_test_file-" + rsdb_test_dataset_csv_file)
 
 rsdb_test_dataset_parquet_file = "rsdb_test_dataset.parquet"
 rsdb_test_dataset_parquet_path = os.path.join(os.path.dirname(__file__), rsdb_test_dataset_parquet_file)
-rsdb_test_dataset_to_write_parquet_path = os.path.join(os.path.dirname(__file__), "tmp_python_test_file-"+rsdb_test_dataset_parquet_file)
+rsdb_test_dataset_to_write_parquet_path = os.path.join(os.path.dirname(__file__),
+                                                       "tmp_python_test_file-" + rsdb_test_dataset_parquet_file)
 
 rsdb_test_dataset_with_errors_csv_file = "rsdb_test_dataset_with_errors.csv"
 rsdb_test_dataset_with_errors_csv_path = os.path.join(os.path.dirname(__file__), rsdb_test_dataset_with_errors_csv_file)
 
 rsdb_test_dataset_with_errors_checked_csv_file = "rsdb_test_dataset_with_errors_checked.csv"
-rsdb_test_dataset_with_errors_checked_csv_path = os.path.join(os.path.dirname(__file__), rsdb_test_dataset_with_errors_checked_csv_file)
+rsdb_test_dataset_with_errors_checked_csv_path = os.path.join(os.path.dirname(__file__),
+                                                              rsdb_test_dataset_with_errors_checked_csv_file)
+
+tmp_tests_enums_file = "tmp_tests_enums.csv"
+tmp_tests_enums_path = os.path.join(os.path.dirname(__file__), tmp_tests_enums_file)
 
 
 @pytest.mark.parametrize("file_path, col, row, value, value_type", [
@@ -65,7 +71,7 @@ def test_check_rsdb_csv_with_errors():
     assert df['nb_schema_errors'].sum() == 2
     # skip those tests on python version 3.9 and lower as the comparison crashes due to diff lib error.
     # Error on python 3.9 : Skipping 422 identical leading characters in diff, use -v to show
-    if sys.version_info >= (3,10):
+    if sys.version_info >= (3, 10):
         assert df.at[2, 'schema_errors'] == df_checked.at[2, 'schema_errors']
         assert df.at[3, 'schema_errors'] == df_checked.at[3, 'schema_errors']
         assert df.at[4, 'schema_errors'] == df_checked.at[4, 'schema_errors']
@@ -73,3 +79,14 @@ def test_check_rsdb_csv_with_errors():
 
     # to re-generate test file to validate:
     # write_rsdb(df, rsdb_test_dataset_with_errors_checked_csv_path)
+
+
+def test_generate_enums_dataframe():
+    """
+    To check that the CSV generated file with the enums is correct, we can check it with the schema rsdb_check function
+    """
+    df = generate_enums_dataframe()
+    df.to_csv(tmp_tests_enums_path, index=False)
+    df = read_rsdb(tmp_tests_enums_path)
+    os.remove(tmp_tests_enums_path)
+    check_rsdb(df)

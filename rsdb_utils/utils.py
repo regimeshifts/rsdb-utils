@@ -3,6 +3,7 @@
 # GNU General Public License v3 (GPLv3)
 
 import json
+import copy
 import warnings
 import pkgutil
 
@@ -211,13 +212,112 @@ def check_rsdb(rsdb_df: pd.DataFrame) -> pd.DataFrame:
                 case['schema_errors'] = error_string
                 case['nb_schema_errors'] = nb_errors_in_cs
                 nb_errors += nb_errors_in_cs
-    print(f"{nb_errors} errors when validating cases against the schema") # TODO: Use logging lib?
+    print(f"{nb_errors} errors when validating cases against the schema")  # TODO: Use logging lib?
 
     rsdb_df = pd.DataFrame.from_records(rsdb_records)
 
     return rsdb_df
 
 
-def generate_categorical_variables_lists() -> pd.DataFrame:
-    return rs_cs_schema
+def generate_enums_dataframe():
+    def get_schema_without_allof():
+        schema = copy.deepcopy(rs_cs_schema['properties'])
 
+        def replace_allof(item_to_replace):
+            """
+            Remove the allOf attributes in an item. Works recursively.
+            """
+            # replace allof
+            if 'allOf' in item_to_replace.keys():
+                for allof_key in item_to_replace['allOf'][0].keys():
+                    item_to_replace[allof_key] = item_to_replace['allOf'][0][allof_key]
+                del item_to_replace['allOf']
+            # recursive call
+            for value in item_to_replace.values():
+                if isinstance(value, dict):
+                    value = replace_allof(value)
+            return item_to_replace
+
+        # we could directly use replace_allof on the whole schema but this
+        # for loop allows us to nicely display debug
+        for root_key in schema.keys():
+            root_item = schema[root_key]
+            # print(item)
+            root_item = replace_allof(root_item)
+            # print(item)
+            # print("")
+        return schema
+
+    def check_type_of_json_item(type_object, type_to_check):
+        if not isinstance(type_object, list):
+            type_object = [type_object]
+        if type_to_check in type_object:
+            return True
+        else:
+            return False
+
+    def create_enum_option_dict(val):
+        """
+        Create the dict with the field names
+        """
+        option = '{'
+        for prop_key in val.keys():
+            if check_type_of_json_item(val[prop_key]['type'], 'number'):
+                option += '"' + str(prop_key) + '": null, '
+            else:
+                option += '"' + str(prop_key) + '": "", '
+        option = option[:-2]
+        option += '}'
+        return option
+
+    schema_without_allof = get_schema_without_allof()
+    enum_options = {}
+    for key in schema_without_allof.keys():
+        item = schema_without_allof[key]
+        # print(item)
+        if check_type_of_json_item(item['type'], "string") \
+                or check_type_of_json_item(item['type'],"integer") \
+                or check_type_of_json_item(item['type'], "number"):
+            if 'enum' in item:
+                enum_options[key] = item['enum']
+            else:
+                enum_options[key] = None
+        elif check_type_of_json_item(item['type'], "array"):
+            # list of simple string
+            if check_type_of_json_item(item['items']['type'], "string"):
+                if 'enum' in item['items']:
+                    enum_options[key] = item['items']['enum']
+                    enum_options[key] = ['[null]' if option is None else '["' + option + '"]' for option in
+                                         enum_options[key]]
+                else:
+                    enum_options[key] = None
+            # list of objects
+            else:
+                # count the number of enums in the properties
+                nb_enums = 0
+                for prop_val in item['items']['properties'].values():
+                    if 'enum' in prop_val:
+                        nb_enums += 1
+                if nb_enums == 0:
+                    enum_options[key] = '[' + create_enum_option_dict(item['items']['properties']) + ']'
+                elif nb_enums == 1:
+                    try:
+                        options = item['items']['properties']['value']['enum']
+                    except Exception as e:
+                        print(e)
+                        raise ValueError(
+                            "Only columns of regime shift type format are supported for the enums in list of objects")
+                    enum_options[key] = []
+                    for option in options:
+                        if option == "Proposed & new type":
+                            enum_options[key].append('[{"value": "Proposed & new type", "other": ""}]')
+                        elif option is None:
+                            enum_options[key].append('[{"value": null}]')
+                        else:
+                            enum_options[key].append('[{"value": "' + option + '"}]')
+                else:
+                    raise ValueError("Multiple enums in the same field are not supported")
+
+    enum_options_df = pd.DataFrame({key: pd.Series(val) for key, val in enum_options.items()})
+
+    return enum_options_df
