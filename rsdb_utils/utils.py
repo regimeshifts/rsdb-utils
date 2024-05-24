@@ -216,3 +216,8 @@ def check_rsdb(rsdb_df: pd.DataFrame) -> pd.DataFrame:
     rsdb_df = pd.DataFrame.from_records(rsdb_records)
 
     return rsdb_df
+
+
+def generate_categorical_variables_lists() -> pd.DataFrame:
+    return rs_cs_schema
+

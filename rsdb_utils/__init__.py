@@ -5,9 +5,11 @@
 from rsdb_utils.utils import read_rsdb
 from rsdb_utils.utils import write_rsdb
 from rsdb_utils.utils import check_rsdb
+from rsdb_utils.utils import generate_categorical_variables_lists
 
 __all__ = [
     "read_rsdb",
     "write_rsdb",
     "check_rsdb",
+    "generate_categorical_variables_lists",
 ]
