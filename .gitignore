@@ -12,3 +12,5 @@ dist/
 *.ipynb
 
 *~lock*
+
+RSDB_tmp.parquet
