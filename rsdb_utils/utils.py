@@ -38,7 +38,8 @@ def jsonize_cell(val):
     if isinstance(val, np.ndarray):
         val = list(val)
     if isinstance(val, (list, dict)):
-        return json.dumps(val)
+        # ensure_ascii=False ensure to preserve UTF-8 encoding
+        return json.dumps(val, ensure_ascii=False)
     else:
         return val
 
