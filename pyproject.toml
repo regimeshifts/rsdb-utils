@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rsdb-utils"
-version = "0.3"
+version = "0.3.1"
 description = "Utils to process the Regime Shifts DataBase CSV and parquet files"
 readme = "README.md"
 authors = [{ name = "Romain Thomas", email = "romain.thomas@su.se" }]
@@ -30,10 +30,10 @@ keywords = [
     "Scientific research"
 ]
 dependencies = [
-    "pandas>=2.2.2",
-    "jsonref>=1.1.0",
-    "jsonschema>=4.22.0",
-    "tqdm>=4.50.0",
+    "pandas>=2.1",
+    "jsonref>=1.1",
+    "jsonschema>=4.22",
+    "tqdm>=4.50",
     "pyarrow"
 ]
 requires-python = ">=3.9"
