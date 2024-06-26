@@ -97,7 +97,7 @@ def read_csv_rsdb(file_path: str) -> pd.DataFrame:
     :return: The database in a pandas DataFrame.
     :rtype: pd.DataFrame
     """
-    rsdb_df = pd.read_csv(file_path)
+    rsdb_df = pd.read_csv(file_path, index_col=False)
     rsdb_df = rsdb_df.map(pythonize_cell_from_csv)
     return rsdb_df
 
@@ -127,7 +127,7 @@ def write_csv_rsdb(rsdb_df: pd.DataFrame, file_path: str):
     :type file_path: str
     """
     rsdb_df = rsdb_df.map(jsonize_cell)
-    rsdb_df.to_csv(file_path)
+    rsdb_df.to_csv(file_path, index=False)
 
 
 def write_parquet_rsdb(rsdb_df: pd.DataFrame, file_path: str):
@@ -139,7 +139,7 @@ def write_parquet_rsdb(rsdb_df: pd.DataFrame, file_path: str):
     :param file_path: the path of the parquet file.
     :type file_path: str
     """
-    rsdb_df.to_parquet(file_path)
+    rsdb_df.to_parquet(file_path, index=False)
 
 
 def read_rsdb(file_path: str) -> pd.DataFrame:
