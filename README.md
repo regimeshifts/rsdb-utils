@@ -112,7 +112,7 @@ df = generate_enums_dataframe()
 df.to_csv("list_of_enums_from_json_schema.csv")
 ```
 
-## Development environment setup
+## Developer section
 
 ### Python local installation
 
@@ -144,6 +144,8 @@ means that you will need to reinstall the package each time you will modify the 
 
 ### Tests
 
+The tests are run in a GitHub action everytime a commit is pushed. 
+
 The tests are run with `pytest`, install it (within the virtual environment) with:
 
 ```bash
@@ -157,6 +159,13 @@ pytest tests/tests.py
 ```
 
 ### Build
+
+The building and publishing are managed by a GitHub action for each new release.
+Carefully check the version number in `pyproject.toml` before creating the new tag and the new release.
+
+Warning: once published on PyPi, a version can't be re-uploaded.
+
+#### Local build
 
 In the development virtual environment, install:
 ```bash
@@ -172,7 +181,17 @@ Configure your pypi access token and publish the package version:
 ```bash
 twine upload dist/rsdb_utils-0.1.tar.gz dist/rsdb_utils-0.1-py3-none-any.whl
 ```
-Once published, a version cannot be re-uploaded.
+
+### How to update the JSON schema
+
+To pull the last schema in the repository, use the following command:
+
+```bash
+git submodule update --recursive --remote
+```
+
+You can then create a new version of `rsdb-utils`: edit the version number in `pyproject.toml`, commit, push and publish
+a new release of `rsdb-utils`.
 
 Romain THOMAS 2024  
 Stockholm Resilience Centre
